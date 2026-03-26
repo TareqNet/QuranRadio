@@ -4,22 +4,19 @@ let pendingResumeTime = 0;
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'play') {
-        if (audio.src !== message.url) {
+        const baseSrc = audio.src.split('#')[0];
+        const baseUrl = message.url.split('#')[0];
+
+        if (baseSrc !== baseUrl) {
             if (!audio.paused) audio.pause();
-            audio.src = message.url;
-            pendingResumeTime = message.resumeTime || 0;
+            audio.src = (message.resumeTime && message.resumeTime > 0) ? `${baseUrl}#t=${message.resumeTime}` : baseUrl;
             audio.load();
         } else if (message.resumeTime && audio.currentTime < 1) {
             audio.currentTime = message.resumeTime;
         }
+        
         audio.play()
-            .then(() => {
-                if (pendingResumeTime > 0) {
-                    audio.currentTime = pendingResumeTime;
-                    pendingResumeTime = 0;
-                }
-                sendResponse({ success: true });
-            })
+            .then(() => sendResponse({ success: true }))
             .catch(err => sendResponse({ success: false, error: err.message }));
         return true; 
     } else if (message.action === 'stop') {
@@ -38,7 +35,12 @@ audio.addEventListener('ended', () => {
 });
 
 audio.addEventListener('error', () => {
-    console.error("Audio streaming error. Skipping...");
+    if (audio.error && audio.error.code === 1) {
+        // Code 1: MEDIA_ERR_ABORTED. Stream was intentionally replaced.
+        console.log("Stream actively replaced. Assuming safe overwrite.");
+        return;
+    }
+    console.error("Audio streaming error. Code:", audio.error ? audio.error.code : "N/A");
     // Fallback: trigger track_ended so background skips to next seamlessly
     chrome.runtime.sendMessage({ action: 'track_ended' });
 });

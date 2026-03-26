@@ -147,6 +147,14 @@ html[dir="rtl"] .surah-controls { text-align: right; }
     margin: 0;
 }
 
+#empty-list-msg {
+    transition: background 0.2s ease;
+}
+
+#empty-list-msg:hover {
+    background: rgba(4, 120, 87, 0.1) !important;
+}
+
 #user-list li {
     padding: 14px 15px;
     border-bottom: 1px solid var(--border);
