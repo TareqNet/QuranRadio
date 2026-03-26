@@ -215,17 +215,20 @@ function populateSurahDropdown(reciter, forced) {
 
     const isThisReciterActive = playbackState.type === 'surah' && playbackState.baseServer === reciter.server;
 
-    // Restore state if we were playing/paused on this reciter, else select first one
-    if (isThisReciterActive) {
-        sel.value = playbackState.currentSurahId;
-        document.getElementById('num-repeat').value = playbackState.repeatCount || 0;
-        document.getElementById('chk-autonext').checked = playbackState.autoNext || false;
-    }
-    
-    // Auto-play requirement: If the user clicked the item directly, play immediately!
-    if (forced) {
-        triggerPlaySurah();
-    }
+    chrome.storage.local.get(['user_auto_next', 'user_repeat'], (res) => {
+        if (isThisReciterActive) {
+            sel.value = playbackState.currentSurahId;
+            document.getElementById('num-repeat').value = typeof playbackState.repeatCount !== 'undefined' ? playbackState.repeatCount : (res.user_repeat || 0);
+            document.getElementById('chk-autonext').checked = typeof playbackState.autoNext !== 'undefined' ? playbackState.autoNext : (res.user_auto_next || false);
+        } else {
+            document.getElementById('num-repeat').value = res.user_repeat || 0;
+            document.getElementById('chk-autonext').checked = res.user_auto_next || false;
+        }
+
+        if (forced) {
+            triggerPlaySurah();
+        }
+    });
 }
 
 function triggerPlayRadio(radioItem) {
@@ -341,8 +344,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Only trigger play on change if they actually change the dropdown
     document.getElementById('sel-surah').onchange = triggerPlaySurah;
-    document.getElementById('num-repeat').onchange = triggerPlaySurah;
-    document.getElementById('chk-autonext').onchange = triggerPlaySurah;
+    
+    // Process repeat count independently without firing a hard play trigger
+    document.getElementById('num-repeat').onchange = (e) => {
+        const val = parseInt(e.target.value) || 0;
+        chrome.storage.local.set({ user_repeat: val });
+        if (playbackState.type === 'surah') {
+            playbackState.repeatCount = val;
+            chrome.storage.local.set({ playback_state: playbackState });
+        }
+    };
+
+    // Process auto-next independently
+    document.getElementById('chk-autonext').onchange = (e) => {
+        const checked = e.target.checked;
+        chrome.storage.local.set({ user_auto_next: checked });
+        if (playbackState.type === 'surah') {
+            playbackState.autoNext = checked;
+            chrome.storage.local.set({ playback_state: playbackState });
+        }
+    };
 
     // Language Dropdown
     const langSelect = document.getElementById('sel-lang');

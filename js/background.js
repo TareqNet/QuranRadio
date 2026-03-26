@@ -153,8 +153,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                         const lang = res.user_lang || 'ar';
                         const cKey = `api_${lang}_suwar`;
                         const suwarCache = await chrome.storage.local.get([cKey]);
-                        let cachedSuwar = suwarCache[cKey] || [];
-                        if (cachedSuwar.length === 0) {
+                        let cachedSuwar = suwarCache[cKey] ? suwarCache[cKey].suwar : [];
+                        if (!cachedSuwar || cachedSuwar.length === 0) {
                             const data = await fetchMP3Quran('suwar', lang);
                             cachedSuwar = data ? data.suwar : [];
                         }
