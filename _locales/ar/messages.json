@@ -1,0 +1,22 @@
+{
+    "extName": { "message": "إذاعة القرآن الكريم" },
+    "extDescription": { "message": "راديو وتلاوات القرآن الكريم من موقع mp3quran.net. استمع للإذاعات المباشرة والقراء والسور مع ميزات متقدمة." },
+    "optionsTitle": { "message": "إذاعة القرآن الكريم - الإعدادات" },
+    "optionsHeader": { "message": "الإعدادات" },
+    "radiosHeader": { "message": "الإذاعات المباشرة" },
+    "recitersHeader": { "message": "القراء" },
+    "searchPlaceholder": { "message": "بحث..." },
+    "addButton": { "message": "إضافة" },
+    "myListHeader": { "message": "قائمتي" },
+    "removeLabel": { "message": "حذف" },
+    "saveMessage": { "message": "تم الحفظ بنجاح" },
+    "playLabel": { "message": "تشغيل" },
+    "pauseLabel": { "message": "إيقاف" },
+    "repeatLabel": { "message": "تكرار السورة" },
+    "autoNextLabel": { "message": "انتقال تلقائي للسورة التالية" },
+    "selectReciterLabel": { "message": "اختر مقرئ أو إذاعة" },
+    "selectSurahLabel": { "message": "اختر السورة" },
+    "loadingLabel": { "message": "جاري التحميل..." },
+    "optionsLink": { "message": "الإعدادات" },
+    "noItemsMessage": { "message": "القائمة فارغة. انتقل للإعدادات لإضافة قراء وإذاعات." }
+}
