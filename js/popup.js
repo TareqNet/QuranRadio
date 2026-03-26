@@ -15,7 +15,7 @@ async function initI18n() {
                 const fetchRes = await fetch(url);
                 const dict = await fetchRes.json();
                 
-                document.getElementById('html-root').dir = lang === 'ar' ? 'rtl' : 'ltr';
+                document.getElementById('html-root').dir = (lang === 'ar' || lang === 'fa') ? 'rtl' : 'ltr';
                 document.title = dict.extName ? dict.extName.message : 'Quran Radio';
                 
                 document.querySelectorAll('[data-i18n]').forEach(el => {
