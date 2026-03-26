@@ -229,7 +229,10 @@ function populateSurahDropdown(reciter, forced) {
 }
 
 function triggerPlayRadio(radioItem) {
-    if (playbackState.playing) return; // Prevent double firing
+    if (playbackState.playing && playbackState.type === 'radio' && playbackState.url === radioItem.url) {
+        return; // Prevent double firing on the identical radio
+    }
+    
     playbackState.playing = true; // Set instantly for UI
     playbackState.type = 'radio';
     playbackState.url = radioItem.url;
