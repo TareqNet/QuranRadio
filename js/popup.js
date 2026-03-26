@@ -165,15 +165,30 @@ function selectItem(index, forced = false) {
 
     const surahControls = document.getElementById('surah-controls');
     
+    const isActiveRadio = playbackState.type === 'radio' && item.type === 'radio' && playbackState.url === item.url;
+    const isActiveReciter = playbackState.type === 'surah' && item.type === 'reciter' && playbackState.baseServer === item.server;
+
+    // Set title safely
+    if (isActiveRadio || isActiveReciter) {
+        if (playbackState.title) document.getElementById('now-playing-title').innerText = playbackState.title;
+        const subLabel = document.getElementById('now-playing-subtitle');
+        if (subLabel) {
+            subLabel.innerText = playbackState.subtitle || "";
+            subLabel.style.display = playbackState.subtitle ? 'block' : 'none';
+        }
+    } else {
+        document.getElementById('now-playing-title').innerText = item.name;
+        const subLabel = document.getElementById('now-playing-subtitle');
+        if (subLabel) subLabel.style.display = 'none';
+    }
+    
     if (item.type === 'radio') {
         surahControls.style.display = 'none';
-        document.getElementById('now-playing-title').innerText = item.name;
         if (forced) {
             triggerPlayRadio(item);
         }
     } else {
         surahControls.style.display = 'flex';
-        document.getElementById('now-playing-title').innerText = item.name;
         
         populateSurahDropdown(item, forced);
     }
@@ -218,6 +233,8 @@ function triggerPlayRadio(radioItem) {
     playbackState.playing = true; // Set instantly for UI
     playbackState.type = 'radio';
     playbackState.url = radioItem.url;
+    playbackState.title = radioItem.name;
+    playbackState.subtitle = "";
     updatePlayButtonUI();
 
     chrome.runtime.sendMessage({
@@ -250,20 +267,28 @@ function triggerPlaySurah() {
     chrome.storage.local.get(['user_lang'], (langRes) => {
         const lang = langRes.user_lang || 'ar';
         const surahWord = lang === 'ar' ? 'سورة' : 'Surah';
-        const fullTitle = `${reciter.name} - ${surahWord} ${sName} - ${reciter.moshafName}`;
+        const surahTitle = `${surahWord} ${sName}`;
+        const subTitle = `${reciter.name} - ${reciter.moshafName}`;
 
-        document.getElementById('now-playing-title').innerText = fullTitle;
+        document.getElementById('now-playing-title').innerText = surahTitle;
+        const subLabel = document.getElementById('now-playing-subtitle');
+        if (subLabel) {
+            subLabel.innerText = subTitle;
+            subLabel.style.display = 'block';
+        }
 
         playbackState.type = 'surah';
         playbackState.baseServer = reciter.server;
         playbackState.currentSurahId = surahId;
+        playbackState.title = surahTitle;
+        playbackState.subtitle = subTitle;
 
         chrome.runtime.sendMessage({
             action: 'play_surah',
             baseServer: reciter.server,
             surahList: reciter.surahList.split(','),
             surahId: surahId,
-            title: fullTitle,
+            title: surahTitle, // Send only main title to background Badge UI
             repeatCount: repeatCount,
             autoNext: autoNext
         }, () => { if(chrome.runtime.lastError) console.debug('Surah msg sent.'); });
@@ -333,6 +358,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             updatePlayButtonUI();
             if (playbackState.title) {
                 document.getElementById('now-playing-title').innerText = playbackState.title;
+            }
+            const subLabel = document.getElementById('now-playing-subtitle');
+            if (subLabel && playbackState.subtitle) {
+                subLabel.innerText = playbackState.subtitle;
+                subLabel.style.display = 'block';
+            } else if (subLabel) {
+                subLabel.style.display = 'none';
             }
             if (playbackState.type === 'surah' && playbackState.currentSurahId) {
                 const sel = document.getElementById('sel-surah');

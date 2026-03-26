@@ -159,12 +159,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                         if (cachedSuwar.length > 0) {
                             const surahObj = cachedSuwar.find(s => s.id === nextSurahId);
                             if (surahObj) {
-                                const parts = state.title.split('-');
-                                const reciterName = parts[0].trim();
                                 const surahLabel = lang === 'ar' ? 'سورة' : 'Surah';
-                                newTitle = `${reciterName} - ${surahLabel} ${surahObj.name}`;
-                                // Note: we're losing the moshaf name strictly here due to string split, 
-                                // but the title isn't critical for playback, just UI display.
+                                newTitle = `${surahLabel} ${surahObj.name}`;
                             }
                         }
                         
