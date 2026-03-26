@@ -1,5 +1,4 @@
-$(document).ready(function()
-{
+$(document).ready(function() {
 	LoadOptions();
 
 	$("#save").click(SaveOptions);
@@ -8,89 +7,76 @@ $(document).ready(function()
 		"<p><input type='text' id='new-radio-name' class='site' placeholder='Radio Name' /> "
 		+ "<input type='text' id='new-radio-url' class='site' placeholder='URL' /> "
 		+ "<button id='add-site'>+</button></p>"
-		);
+	);
 	
-	$("#add-site").click(function()
-	{
+	$("#add-site").click(function() {
 		var new_radio_name = $("#new-radio-name").val();
 		var new_radio_url = $("#new-radio-url").val();
-		var radios_urls;
 		
-		if(localStorage.getItem('radios_urls') != null)
-		{
-			radios_urls = JSON.parse(localStorage.getItem('radios_urls'));
-		}
-		else
-		{
-			radios_urls = Object();
-		}
-
-		if(typeof radios_urls["urls"] == 'undefined')
-		{
-			radios_urls["urls"] = Array();
-		}
-		
-		radios_urls["urls"].push({"radio-name" : new_radio_name, "radio-url" : new_radio_url});
-		localStorage.setItem('radios_urls', JSON.stringify(radios_urls));
-
-		var i = $("#stored-urls").length;
-		
-		$("#stored-urls").append("<p><div class='url'>" + new_radio_name + "</div> <div class='url'>" + new_radio_url + "</div> <button id='del-" + i + "'>-</button></p>");
-		$("#del-" + i).click(DeleteURL);
-		
-		$("#new-radio-name").val("");
-		$("#new-radio-url").val("");
-		
-		Notify("URL Added");
+		chrome.storage.local.get(['radios_urls'], function(res) {
+            var radios_urls = res.radios_urls || [];
+            
+            radios_urls.push({"title" : new_radio_name, "url" : new_radio_url});
+            chrome.storage.local.set({'radios_urls': radios_urls}, function() {
+                var i = radios_urls.length - 1;
+                $("#stored-urls").append("<p><div class='url'>" + new_radio_name + "</div> <div class='url'>" + new_radio_url + "</div> <button id='del-" + i + "' data-index='"+i+"'>-</button></p>");
+                $("#del-" + i).click(DeleteURL);
+                
+                $("#new-radio-name").val("");
+                $("#new-radio-url").val("");
+                
+                Notify("URL Added");
+            });
+		});
 	});
 });
 
-function LoadOptions()
-{
+function LoadOptions() {
 	$("#radios-urls").append("<div id='stored-urls'></div>");
 
-	if(localStorage.radios_urls != null)
-	{
-		var radios_urls = localStorage.getItem('radios_urls');
-		var urls = JSON.parse(radios_urls)["urls"];
-
-		for(i = 0; i < urls.length; i++)
-		{
-			$("#stored-urls").append("<p><lable class='site'>" + urls[i] + "</lable> <button id='del-" + i + "'>-</button></p>");
-			$("#del-" + i).on('click', DeleteURL);
-		}
-	}
+    chrome.storage.local.get(['radios_urls'], function(res) {
+        if(res.radios_urls) {
+            var urls = res.radios_urls;
+            for(var i = 0; i < urls.length; i++) {
+                var title = urls[i].title || urls[i]["radio-name"];
+                var url = urls[i].url || urls[i]["radio-url"];
+                $("#stored-urls").append("<p><label class='site'>" + title + "</label> <button id='del-" + i + "' data-index='"+i+"'>-</button></p>");
+                $("#del-" + i).on('click', DeleteURL);
+            }
+        }
+    });
 }
 
-function SaveOptions()
-{
+function SaveOptions() {
 	Notify();
 }
 
-function DeleteURL()
-{
-	var j = this.id;
-	var n = j.replace("del-", "")
-	
+function DeleteURL() {
+	var index = $(this).data("index");
 	$(this).parent().remove();
 	
-	var radios_urls = JSON.parse(localStorage.getItem('radios_urls'));
-
-	radios_urls["urls"].splice(n, 1);
-	
-	localStorage.setItem('radios_urls', JSON.stringify(radios_urls));
-
-	Notify("Site Deleted");
+	chrome.storage.local.get(['radios_urls'], function(res) {
+        if (res.radios_urls) {
+            res.radios_urls.splice(index, 1);
+            chrome.storage.local.set({'radios_urls': res.radios_urls}, function() {
+                Notify("Site Deleted");
+                
+                // Re-render to fix indices
+                $("#stored-urls").empty();
+                for(var i = 0; i < res.radios_urls.length; i++) {
+                    var title = res.radios_urls[i].title || res.radios_urls[i]["radio-name"];
+                    $("#stored-urls").append("<p><label class='site'>" + title + "</label> <button id='del-" + i + "' data-index='"+i+"'>-</button></p>");
+                    $("#del-" + i).on('click', DeleteURL);
+                }
+            });
+        }
+    });
 }
 
-function Notify(message)
-{
-	if(message)
-	{
+function Notify(message) {
+	if(message) {
 		$("#ShowNotification").html(message);
-	}
-	else
-	{
+	} else {
 		$("#ShowNotification").html("Saved Successfully");
 	}
 	$("#ShowNotification").fadeIn().delay(800).fadeOut();

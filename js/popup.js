@@ -1,81 +1,75 @@
-var audio, audio2, control, bg;
+var control;
+var currentUrl;
+var currentTitle;
 
-$(document).ready(function()
-{
-	bg = chrome.extension.getBackgroundPage();
-	audio = bg.document.getElementById("AudioPlayer");
-	$("#title").html(localStorage.title);
+$(document).ready(function() {
+    control = $("#control");
 
-	control = $("#control");
+    // Initialize from storage
+    chrome.storage.local.get(['radios_urls', 'url', 'title', 'playing'], function(res) {
+        if (!res.radios_urls) {
+             chrome.runtime.sendMessage({action: 'getDataStatus'}, function(response) {
+                 if(response && response.data) {
+                    renderRadios(response.data);
+                 }
+             });
+        } else {
+            renderRadios(res.radios_urls);
+            currentUrl = res.url;
+            currentTitle = res.title;
+            $("#title").html(currentTitle);
 
-	if(audio.paused)
-	{
-		control.attr("src", "Icons/play.png");
-	}
-	else
-	{
-		control.attr("src", "Icons/pause.png");
-	}
+            if (res.playing) {
+                control.attr("src", "Icons/pause.png");
+            } else {
+                control.attr("src", "Icons/play.png");
+            }
+        }
+    });
 
-	control.click(function()
-	{
-		if($(this).attr("src") == "Icons/play.png")
-		{
-			play();
-		}
-		else
-		{
-			stop();
-		}
-	});
-	
-	var radios_list = $("#radios-list");
-	
-	var radios_array = getRadios();
-	for(i = 0; i < radios_array.length; i++)
-	{
-		var url = radios_array[i]["url"];
-		var title = radios_array[i]["title"];
-		radios_list.append("<li class='radio-list' data-title='" + title + "' data-url='" + url + "'>" + title + "</li>");
-	}
-
-	var radio_list = $(".radio-list");
-
-	radio_list.click(function()
-	{
-		localStorage.url = $(this).data("url");
-		localStorage.title = $(this).data("title");
-		play(localStorage.url);
-	});
+    control.click(function() {
+        if ($(this).attr("src") === "Icons/play.png") {
+            play(currentUrl, currentTitle);
+        } else {
+            stop();
+        }
+    });
 });
 
-function play(url)
-{
-	if(url != undefined && audio.src != url)
-	{
-		audio.remove();
-		holder = bg.document.getElementById("holder");
-		$(holder).append("<audio id='AudioPlayer' src='" + url + "' ></audio>" );
-		audio = bg.document.getElementById("AudioPlayer");
-	}
-	control.attr("src", "Icons/pause.png");
-	$("#title").html(localStorage.title);
-	audio.play();
-	
-	chrome.browserAction.setBadgeBackgroundColor({"color": "#187700"});
-	chrome.browserAction.setBadgeText({"text":"►"});
-	chrome.browserAction.setTitle({"title" : "Quran Radio - " + localStorage.title});
+function renderRadios(radios_array) {
+    var radios_list = $("#radios-list");
+    radios_list.empty();
+    for (var i = 0; i < radios_array.length; i++) {
+        var url = radios_array[i]["url"];
+        var title = radios_array[i]["title"];
+        if (!url && radios_array[i]["radio-url"]) url = radios_array[i]["radio-url"];
+        if (!title && radios_array[i]["radio-name"]) title = radios_array[i]["radio-name"];
 
-	console.log(audio.src);
+        radios_list.append("<li class='radio-list' data-title='" + title + "' data-url='" + url + "'>" + title + "</li>");
+    }
+
+    $(".radio-list").click(function() {
+        var url = $(this).data("url");
+        var title = $(this).data("title");
+        play(url, title);
+    });
 }
 
-function stop()
-{
-	if(audio != undefined)
-	{
-		audio.pause();
-	}
-	control.attr("src", "Icons/play.png");
-	chrome.browserAction.setBadgeText({"text":""});
-	console.log("stop");
+function play(url, title) {
+    if (!url) return;
+    currentUrl = url;
+    currentTitle = title;
+    $("#title").html(title);
+    control.attr("src", "Icons/pause.png");
+
+    chrome.runtime.sendMessage({
+        action: 'play',
+        url: url,
+        title: title
+    });
+}
+
+function stop() {
+    control.attr("src", "Icons/play.png");
+    chrome.runtime.sendMessage({ action: 'stop' });
 }
