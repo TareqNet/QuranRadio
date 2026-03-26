@@ -108,7 +108,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             repeatCount: parseInt(message.repeatCount) || 0,
             autoNext: message.autoNext === true
         };
-        const url = message.baseServer + zeroPad(message.surahId, 3) + '.mp3';
+        let url = message.baseServer;
+        if (!url.endsWith('/')) url += '/';
+        url += zeroPad(message.surahId, 3) + '.mp3';
         playUrl(url, message.title, stateData).then(sendResponse);
         return true;
         
@@ -165,7 +167,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                             }
                         }
                         
-                        const url = state.baseServer + zeroPad(nextSurahId, 3) + '.mp3';
+                        let url = state.baseServer;
+                        if (!url.endsWith('/')) url += '/';
+                        url += zeroPad(nextSurahId, 3) + '.mp3';
                         state.currentSurahId = nextSurahId;
                         state.title = newTitle;
                         
