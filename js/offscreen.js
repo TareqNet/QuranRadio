@@ -37,7 +37,7 @@ audio.addEventListener('error', () => {
     chrome.runtime.sendMessage({ action: 'track_ended' });
 });
 
-audio.addEventListener('loadedmetadata', () => {
+audio.addEventListener('canplay', () => {
     if (pendingResumeTime > 0) {
         audio.currentTime = pendingResumeTime;
         pendingResumeTime = 0;
