@@ -13,7 +13,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             audio.currentTime = message.resumeTime;
         }
         audio.play()
-            .then(() => sendResponse({ success: true }))
+            .then(() => {
+                if (pendingResumeTime > 0) {
+                    audio.currentTime = pendingResumeTime;
+                    pendingResumeTime = 0;
+                }
+                sendResponse({ success: true });
+            })
             .catch(err => sendResponse({ success: false, error: err.message }));
         return true; 
     } else if (message.action === 'stop') {
@@ -37,12 +43,7 @@ audio.addEventListener('error', () => {
     chrome.runtime.sendMessage({ action: 'track_ended' });
 });
 
-audio.addEventListener('canplay', () => {
-    if (pendingResumeTime > 0) {
-        audio.currentTime = pendingResumeTime;
-        pendingResumeTime = 0;
-    }
-});
+
 
 // Periodically push currentTime to storage
 setInterval(() => {
