@@ -216,13 +216,15 @@ function populateSurahDropdown(reciter, forced) {
     const isThisReciterActive = playbackState.type === 'surah' && playbackState.baseServer === reciter.server;
 
     chrome.storage.local.get(['user_auto_next', 'user_repeat'], (res) => {
+        const defaultAutoNext = res.user_auto_next !== undefined ? res.user_auto_next : true;
+
         if (isThisReciterActive) {
             sel.value = playbackState.currentSurahId;
             document.getElementById('num-repeat').value = typeof playbackState.repeatCount !== 'undefined' ? playbackState.repeatCount : (res.user_repeat || 0);
-            document.getElementById('chk-autonext').checked = typeof playbackState.autoNext !== 'undefined' ? playbackState.autoNext : (res.user_auto_next || false);
+            document.getElementById('chk-autonext').checked = typeof playbackState.autoNext !== 'undefined' ? playbackState.autoNext : defaultAutoNext;
         } else {
             document.getElementById('num-repeat').value = res.user_repeat || 0;
-            document.getElementById('chk-autonext').checked = res.user_auto_next || false;
+            document.getElementById('chk-autonext').checked = defaultAutoNext;
         }
 
         if (forced) {
