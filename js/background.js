@@ -45,10 +45,18 @@ async function fetchMP3Quran(endpoint, lang = null) {
 }
 
 chrome.runtime.onInstalled.addListener(() => {
-    chrome.storage.local.set({ playback_state: { playing: false } });
+    chrome.storage.local.get(['playback_state'], (res) => {
+        let state = res.playback_state || {};
+        state.playing = false;
+        chrome.storage.local.set({ playback_state: state });
+    });
 });
 chrome.runtime.onStartup.addListener(() => {
-    chrome.storage.local.set({ playback_state: { playing: false } });
+    chrome.storage.local.get(['playback_state'], (res) => {
+        let state = res.playback_state || {};
+        state.playing = false;
+        chrome.storage.local.set({ playback_state: state });
+    });
 });
 
 // Update Badge UI
