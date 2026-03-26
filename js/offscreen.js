@@ -4,7 +4,7 @@ let currentUrl = "";
 function createAudioElement() {
     if (audio) {
         audio.pause();
-        audio.removeAttribute('src'); // Forcibly detach media
+        audio.removeAttribute('src');
         audio.load();
         audio.remove();
     }
@@ -17,11 +17,7 @@ function createAudioElement() {
     });
 
     newAudio.addEventListener('error', () => {
-        if (newAudio.error && newAudio.error.code === 1) {
-            console.log("Stream actively replaced. Assuming safe overwrite.");
-            return;
-        }
-        console.error("Audio streaming error. Code:", newAudio.error ? newAudio.error.code : "N/A");
+        if (newAudio.error && newAudio.error.code === 1) return;
         chrome.runtime.sendMessage({ action: 'track_ended' });
     });
 
@@ -36,16 +32,28 @@ function createAudioElement() {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'play') {
-        const baseUrl = message.url.split('#')[0];
+        const baseUrl = message.url.split('#')[0]; // Strip fragments just in case
 
         if (currentUrl !== baseUrl || !audio) {
             audio = createAudioElement();
             currentUrl = baseUrl;
-            audio.src = (message.resumeTime && message.resumeTime > 0) ? `${baseUrl}#t=${message.resumeTime}` : baseUrl;
+            audio.src = baseUrl; // Pure URL
+            
+            if (message.resumeTime > 0) {
+                // Ultimate Seek Fallback: Wait until audio engine physically decodes and moves the playhead
+                const forceSeek = () => {
+                    if (audio.currentTime > 0.05) {
+                        audio.removeEventListener('timeupdate', forceSeek);
+                        try {
+                            audio.currentTime = message.resumeTime;
+                        } catch(e) { }
+                    }
+                };
+                audio.addEventListener('timeupdate', forceSeek);
+            }
             audio.load();
-        } else if (message.resumeTime && audio.currentTime < 1) {
-            // Same track requested, fallback seek if paused remotely
-            audio.currentTime = message.resumeTime;
+        } else if (message.resumeTime > 0 && audio.currentTime < 1) {
+            try { audio.currentTime = message.resumeTime; } catch(e) {}
         }
         
         audio.play()

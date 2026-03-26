@@ -11,10 +11,6 @@
 		"offscreen"
 	],
 	"host_permissions": [
-		"http://tareq.tk/*",
-		"http://*.tareq.tk/*",
-		"https://tareq.tk/*",
-		"https://*.tareq.tk/*",
 		"http://*.mp3quran.net/*",
 		"https://*.mp3quran.net/*"
 	],
