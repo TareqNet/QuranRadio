@@ -3,6 +3,9 @@ let currentUrl = "";
 
 function createAudioElement() {
     if (audio) {
+        audio.onpause = null;
+        audio.onerror = null;
+        audio.onended = null;
         audio.pause();
         audio.removeAttribute('src');
         audio.load();
@@ -12,20 +15,21 @@ function createAudioElement() {
     const newAudio = document.createElement('audio');
     document.body.appendChild(newAudio);
     
-    newAudio.addEventListener('ended', () => {
+    newAudio.onended = () => {
         chrome.runtime.sendMessage({ action: 'track_ended' });
-    });
+    };
 
-    newAudio.addEventListener('error', () => {
+    newAudio.onerror = () => {
         if (newAudio.error && newAudio.error.code === 1) return;
+        console.error("Audio streaming error. Code:", newAudio.error ? newAudio.error.code : "N/A");
         chrome.runtime.sendMessage({ action: 'track_ended' });
-    });
+    };
 
-    newAudio.addEventListener('pause', () => {
+    newAudio.onpause = () => {
         if (newAudio.src && newAudio.duration > 0) {
             chrome.runtime.sendMessage({ action: 'sync_time', currentTime: newAudio.currentTime });
         }
-    });
+    };
 
     return newAudio;
 }
