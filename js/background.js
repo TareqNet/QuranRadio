@@ -95,7 +95,7 @@ async function stopAudio() {
 // Handle messages from UI and Offscreen
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'play_radio') {
-        playUrl(message.url, message.title, { type: 'radio' }).then(sendResponse);
+        playUrl(message.url, message.title, { type: 'radio', subtitle: "" }).then(sendResponse);
         return true; 
         
     } else if (message.action === 'play_surah') {
@@ -104,6 +104,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             baseServer: message.baseServer,
             surahList: message.surahList,
             currentSurahId: message.surahId,
+            subtitle: message.subtitle,
             repeatCount: parseInt(message.repeatCount) || 0,
             autoNext: message.autoNext === true
         };

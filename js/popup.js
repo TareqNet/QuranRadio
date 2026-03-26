@@ -243,7 +243,8 @@ function triggerPlayRadio(radioItem) {
     chrome.runtime.sendMessage({
         action: 'play_radio',
         url: radioItem.url,
-        title: radioItem.name
+        title: radioItem.name,
+        subtitle: ""
     }, () => { if(chrome.runtime.lastError) console.debug('Radio msg sent.'); });
 }
 
@@ -292,6 +293,7 @@ function triggerPlaySurah() {
             surahList: reciter.surahList.split(','),
             surahId: surahId,
             title: surahTitle, // Send only main title to background Badge UI
+            subtitle: subTitle,
             repeatCount: repeatCount,
             autoNext: autoNext
         }, () => { if(chrome.runtime.lastError) console.debug('Surah msg sent.'); });
