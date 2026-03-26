@@ -1,30 +1,31 @@
 {
 	"name": "Quran Radio",
 	"description": "The Holy Quran Kareem Radio from mp3quran.net .",
-	"version": "1.0.3",
-	"manifest_version": 2,
+	"version": "2.0.0",
+	"manifest_version": 3,
 	"homepage_url": "http://labs.tareq.tk/ChromeEx/QuranRadio",
 	"update_url": "https://clients2.google.com/service/update2/crx",
-	"permissions":
-	[
-		"background",
+	"permissions": [
+		"storage",
+		"offscreen"
+	],
+	"host_permissions": [
 		"http://tareq.tk/*",
 		"http://*.tareq.tk/*",
 		"https://tareq.tk/*",
-		"https://*.tareq.tk/*"
+		"https://*.tareq.tk/*",
+		"http://*.mp3quran.net/*",
+		"https://*.mp3quran.net/*"
 	],
-	"background":
-	{
-		"page": "background.html"
+	"background": {
+		"service_worker": "js/background.js"
 	},
-	"browser_action":
-	{
+	"action": {
 		"default_icon": "Icons/Icon.png",
 		"default_popup": "popup.html"
 	},
 	"options_page": "options.html",
-	"icons":
-	{
-    	"128": "Icons/Icon.png"
-    }
+	"icons": {
+		"128": "Icons/Icon.png"
+	}
 }
