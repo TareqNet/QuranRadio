@@ -71,10 +71,10 @@ function updateUIBadge(isPlaying, title = "") {
     }
 }
 
-async function playUrl(url, title, stateData = null) {
+async function playUrl(url, title, stateData = null, resumeTime = 0) {
     await setupOffscreenDocument('offscreen.html');
     return new Promise((resolve) => {
-        chrome.runtime.sendMessage({ action: 'play', url: url }, (response) => {
+        chrome.runtime.sendMessage({ action: 'play', url: url, resumeTime: resumeTime }, (response) => {
             updateUIBadge(true, title);
             const newState = { playing: true, url: url, title: title };
             if (stateData) Object.assign(newState, stateData);
@@ -113,18 +113,29 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             surahList: message.surahList,
             currentSurahId: message.surahId,
             subtitle: message.subtitle,
+            currentTime: message.resumeTime || 0,
             repeatCount: parseInt(message.repeatCount) || 0,
             autoNext: message.autoNext === true
         };
         let url = message.baseServer;
         if (!url.endsWith('/')) url += '/';
         url += zeroPad(message.surahId, 3) + '.mp3';
-        playUrl(url, message.title, stateData).then(sendResponse);
+        playUrl(url, message.title, stateData, message.resumeTime).then(sendResponse);
         return true;
         
     } else if (message.action === 'stop') {
         stopAudio().then(sendResponse);
         return true;
+        
+    } else if (message.action === 'sync_time') {
+        chrome.storage.local.get(['playback_state'], (res) => {
+            if (res.playback_state && res.playback_state.type === 'surah') {
+                res.playback_state.currentTime = message.currentTime;
+                chrome.storage.local.set({ playback_state: res.playback_state });
+            }
+        });
+        sendResponse({handled: true});
+        return false;
         
     } else if (message.action === 'status') {
         chrome.runtime.sendMessage({ action: 'get_status' }, (res) => {
@@ -143,8 +154,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 // Check repeat
                 if (state.repeatCount > 0) {
                     state.repeatCount -= 1;
-                    const url = state.baseServer + zeroPad(state.currentSurahId, 3) + '.mp3';
-                    await playUrl(url, state.title, state); // re-save updated state
+                    state.currentTime = 0;
+                    let url = state.baseServer;
+                    if(!url.endsWith('/')) url += '/';
+                    url += zeroPad(state.currentSurahId, 3) + '.mp3';
+                    await playUrl(url, state.title, state, 0); // re-save updated state
                 } 
                 // Check auto-next
                 else if (state.autoNext && state.surahList) {
@@ -180,8 +194,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                         url += zeroPad(nextSurahId, 3) + '.mp3';
                         state.currentSurahId = nextSurahId;
                         state.title = newTitle;
+                        state.currentTime = 0;
                         
-                        await playUrl(url, newTitle, state);
+                        await playUrl(url, newTitle, state, 0);
                     } else {
                         updateUIBadge(false);
                     }
