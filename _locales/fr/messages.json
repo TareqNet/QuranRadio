@@ -1,0 +1,17 @@
+{
+  "extName": {"message": "Radio du Saint Coran"},
+  "extDesc": {"message": "Radio en direct du Saint Coran."},
+  "nowPlayingLabel": {"message": "Radio du Saint Coran"},
+  "playRadioLabel": {"message": "Lecture/Pause"},
+  "settingsTitle": {"message": "Paramètres"},
+  "selectReciterLabel": {"message": "Ma Liste"},
+  "noItemsMessage": {"message": "La liste est vide... Veuillez l'ajouter depuis les paramètres."},
+  "myListSection": {"message": "Ma Liste"},
+  "radiosSection": {"message": "Radios en Direct"},
+  "recitersSection": {"message": "Récitateurs"},
+  "searchPlaceholder": {"message": "Rechercher..."},
+  "addLabel": {"message": "Ajouter"},
+  "removeLabel": {"message": "Supprimer"},
+  "repeatLabel": {"message": "Répéter:"},
+  "autoNextLabel": {"message": "Auto-Suivant"}
+}

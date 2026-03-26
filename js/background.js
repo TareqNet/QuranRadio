@@ -30,7 +30,9 @@ function zeroPad(num, places) {
 async function fetchMP3Quran(endpoint, lang = null) {
     const res = await chrome.storage.local.get(['user_lang']);
     const userLang = res.user_lang || 'ar';
-    const locale = lang || userLang;
+    let locale = lang || userLang;
+    if (locale === 'en') locale = 'eng';
+    
     const url = `https://mp3quran.net/api/v3/${endpoint}?language=${locale}`;
     try {
         const response = await fetch(url);

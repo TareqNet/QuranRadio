@@ -43,7 +43,8 @@ function updatePlayButtonUI() {
 
 async function fetchAPI(endpoint, lang) {
     try {
-        const res = await fetch(`https://mp3quran.net/api/v3/${endpoint}?language=${lang}`);
+        const apiLang = lang === 'en' ? 'eng' : lang;
+        const res = await fetch(`https://mp3quran.net/api/v3/${endpoint}?language=${apiLang}`);
         return await res.json();
     } catch(e) {
         return null;
@@ -313,16 +314,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('num-repeat').onchange = triggerPlaySurah;
     document.getElementById('chk-autonext').onchange = triggerPlaySurah;
 
-    // Language toggle
-    document.getElementById('lang-toggle').onclick = () => {
+    // Language Dropdown
+    const langSelect = document.getElementById('sel-lang');
+    if (langSelect) {
         chrome.storage.local.get(['user_lang'], (res) => {
-            const currentLang = res.user_lang || 'ar';
-            const newLang = currentLang === 'ar' ? 'en' : 'ar';
-            chrome.storage.local.set({user_lang: newLang}, () => {
+            langSelect.value = res.user_lang || 'ar';
+        });
+        langSelect.addEventListener('change', (e) => {
+            chrome.storage.local.set({user_lang: e.target.value}, () => {
                 location.reload();
             });
         });
-    };
+    }
 
     chrome.storage.onChanged.addListener((changes, area) => {
         if (area === 'local' && changes.playback_state) {

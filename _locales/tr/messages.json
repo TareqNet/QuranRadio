@@ -1,0 +1,17 @@
+{
+  "extName": {"message": "Kur'an-ı Kerim Radyosu"},
+  "extDesc": {"message": "Kur'an-ı Kerim Radyosu."},
+  "nowPlayingLabel": {"message": "Kur'an-ı Kerim Radyosu"},
+  "playRadioLabel": {"message": "Oynat/Durdur"},
+  "settingsTitle": {"message": "Ayarlar"},
+  "selectReciterLabel": {"message": "Listem"},
+  "noItemsMessage": {"message": "Liste boş... Lütfen ayarlardan ekleyin."},
+  "myListSection": {"message": "Listem"},
+  "radiosSection": {"message": "Canlı Radyolar"},
+  "recitersSection": {"message": "Okuyucular"},
+  "searchPlaceholder": {"message": "Ara..."},
+  "addLabel": {"message": "Ekle"},
+  "removeLabel": {"message": "Kaldır"},
+  "repeatLabel": {"message": "Tekrar:"},
+  "autoNextLabel": {"message": "Otom. Sonraki Sure"}
+}

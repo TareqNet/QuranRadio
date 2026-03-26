@@ -1,0 +1,17 @@
+{
+  "extName": {"message": "رادیو قرآن کریم"},
+  "extDesc": {"message": "رادیو قرآن کریم."},
+  "nowPlayingLabel": {"message": "رادیو قرآن کریم"},
+  "playRadioLabel": {"message": "پخش/توقف"},
+  "settingsTitle": {"message": "تنظیمات"},
+  "selectReciterLabel": {"message": "لیست من"},
+  "noItemsMessage": {"message": "لیست خالی است... لطفاً از تنظیمات اضافه کنید."},
+  "myListSection": {"message": "لیست من"},
+  "radiosSection": {"message": "رادیوهای زنده"},
+  "recitersSection": {"message": "قاریان"},
+  "searchPlaceholder": {"message": "جستجو..."},
+  "addLabel": {"message": "افزودن"},
+  "removeLabel": {"message": "حذف"},
+  "repeatLabel": {"message": "تکرار:"},
+  "autoNextLabel": {"message": "سوره بعدی خودکار"}
+}

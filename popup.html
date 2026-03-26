@@ -45,8 +45,15 @@
 
         <!-- Footer -->
         <div class="footer">
-            <a href="options.html" target="_blank" data-i18n="optionsLink">Settings</a>
-            <span id="lang-toggle" style="cursor:pointer; color: var(--primary);">▼ Ar/En</span>
+            <a href="options.html" target="_blank" data-i18n="optionsLink" style="color:var(--primary); font-weight:bold; text-decoration:none;">Settings</a>
+            <select id="sel-lang" class="lang-select">
+                <option value="ar">العربية</option>
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="tr">Türkçe</option>
+                <option value="fa">فارسی</option>
+                <option value="es">Español</option>
+            </select>
         </div>
     </div>
     <script src="js/popup.js"></script>
