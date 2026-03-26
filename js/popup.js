@@ -378,6 +378,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // Empty list button redirect
+    const emptyBtn = document.getElementById('empty-list-msg');
+    if (emptyBtn) {
+        emptyBtn.addEventListener('click', () => {
+            if (chrome.runtime.openOptionsPage) {
+                chrome.runtime.openOptionsPage();
+            } else {
+                window.open(chrome.runtime.getURL('options.html'));
+            }
+        });
+    }
+
     chrome.storage.onChanged.addListener((changes, area) => {
         if (area === 'local' && changes.playback_state) {
             playbackState = changes.playback_state.newValue || { playing: false };

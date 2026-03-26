@@ -41,7 +41,10 @@
         <div class="list-section">
             <h3 data-i18n="selectReciterLabel">Select Reciter or Radio</h3>
             <ul id="user-list"></ul>
-            <p id="empty-list-msg" data-i18n="noItemsMessage" style="display:none; text-align:center; padding: 15px; color:#6b7280;"></p>
+            <div id="empty-list-msg" style="display:none; text-align:center; padding: 40px 15px; cursor:pointer; background: rgba(4, 120, 87, 0.05); border-radius: 8px; margin-top: 10px; transition: background 0.2s;" onmouseover="this.style.background='rgba(4, 120, 87, 0.1)'" onmouseout="this.style.background='rgba(4, 120, 87, 0.05)'">
+                <svg style="width: 45px; height: 45px; fill: var(--primary); margin-bottom: 12px;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                <div data-i18n="noItemsMessage" style="color: var(--primary); font-weight: bold; font-size: 16px;"></div>
+            </div>
         </div>
 
         <!-- Footer -->
