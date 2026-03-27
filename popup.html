@@ -1,25 +1,65 @@
-<html>
-	<head>
-		<link rel="stylesheet" type="text/css" href="css/style.css" />
-		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-		<title>Quran Radio</title>
-	</head>
-	<body>
-		<div class="master">
-			<div id="player">
-				<div class="title">
-					<h2 id="title"></h2>
-				</div>
-				<div class="control">
-					<img id="control" src="Icons/play.png" width="64" height="64" />
-				</div>
-				<div>
-					<ul id="radios-list"></ul>
-				</div>
-			</div>
-			<div class="footer"><a href="http://tareq.tk/labs" target="_blank">tareq.tk</a> 2014</div>
-		</div>
-		<script type="text/javascript" src="js/jquery.min.js"></script>
-		<script type="text/javascript" src="js/popup.js"></script>
-	</body>
+<!DOCTYPE html>
+<html id="html-root">
+<head>
+    <meta charset="utf-8">
+    <title>__MSG_extName__</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+    <div class="master">
+        <!-- Player Section -->
+        <div id="player" class="player-container">
+            <div class="player-header" style="margin-bottom: 25px;">
+                <h2 id="now-playing-title" data-i18n="extName" style="margin-bottom: 5px;">Quran Radio</h2>
+                <div id="now-playing-subtitle" style="font-size: 14px; opacity: 0.8; text-align: center; display: none; margin-bottom: 10px; margin-top: 5px;"></div>
+            </div>
+            
+            <div class="player-controls">
+                <img id="btn-play-pause" src="Icons/play.png" width="64" height="64" style="cursor: pointer; transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);" />
+            </div>
+
+            <!-- Surah specific controls (Hidden if radio is playing) -->
+            <div id="surah-controls" class="surah-controls" style="display: none;">
+                <label>
+                    <span data-i18n="selectSurahLabel">Select Surah</span>
+                    <select id="sel-surah"></select>
+                </label>
+                <div class="advanced-opts">
+                    <label>
+                        <span data-i18n="repeatLabel">Repeat</span>
+                        <input type="number" id="num-repeat" min="0" value="0" style="width: 50px;">
+                    </label>
+                    <label>
+                        <input type="checkbox" id="chk-autonext">
+                        <span data-i18n="autoNextLabel">Auto-next</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- User List Section -->
+        <div class="list-section">
+            <h3 data-i18n="selectReciterLabel">Select Reciter or Radio</h3>
+            <ul id="user-list"></ul>
+            <div id="empty-list-msg" style="display:none; text-align:center; padding: 40px 15px; cursor:pointer; background: rgba(4, 120, 87, 0.05); border-radius: 8px; margin-top: 10px;">
+                <svg style="width: 45px; height: 45px; fill: var(--primary); margin-bottom: 12px;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                <div data-i18n="noItemsMessage" style="color: var(--primary); font-weight: bold; font-size: 16px;"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <a href="options.html" target="_blank" data-i18n="optionsLink" style="color:var(--primary); font-weight:bold; text-decoration:none;">Settings</a>
+            <select id="sel-lang" class="lang-select">
+                <option value="ar">العربية</option>
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="tr">Türkçe</option>
+                <option value="fa">فارسی</option>
+                <option value="es">Español</option>
+            </select>
+        </div>
+    </div>
+    <script src="js/popup.js"></script>
+</body>
 </html>

@@ -1,51 +1,55 @@
-<html>
-	<head>
-		<link rel="stylesheet" type="text/css" href="css/options.css" />
-		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-		<title>Quran Radio - Options</title>
-	</head>
-	<body>
+<!DOCTYPE html>
+<html id="html-root">
+<head>
+    <meta charset="utf-8">
+    <title>__MSG_optionsTitle__</title>
+    <link rel="stylesheet" type="text/css" href="css/options.css">
+</head>
+<body>
+    <div class="container">
+        <header style="display: flex; justify-content: space-between; align-items: center;">
+            <h1 data-i18n="optionsHeader">Options</h1>
+            <select id="sel-lang" class="lang-select" style="font-size: 16px; padding: 5px;">
+                <option value="ar">العربية</option>
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="tr">Türkçe</option>
+                <option value="fa">فارسی</option>
+                <option value="es">Español</option>
+            </select>
+        </header>
 
-		<div class="maia-header">
-			<div class="maia-aux">
-				<h1>Quran Radio - Options</h1>
-			</div>
-		</div>
+        <div class="main-content">
+            <!-- Search & Add Section -->
+            <section class="add-section">
+                
+                <!-- Radios Box -->
+                <div class="box">
+                    <h2 data-i18n="radiosHeader">Live Radios</h2>
+                    <input type="text" id="radios-search" data-i18n-placeholder="searchPlaceholder" placeholder="Search...">
+                    <ul id="radios-results" class="results-list"></ul>
+                </div>
 
-		<div id="maia-main">
-			<h1>
-				<span i18n-content="options_header">Options</span>
-			</h1>
+                <!-- Reciters Box -->
+                <div class="box">
+                    <h2 data-i18n="recitersHeader">Reciters</h2>
+                    <input type="text" id="reciters-search" data-i18n-placeholder="searchPlaceholder" placeholder="Search...">
+                    <ul id="reciters-results" class="results-list"></ul>
+                </div>
+            </section>
 
-			<div class="space-smaller"></div>
+            <!-- User List Section -->
+            <section class="mylist-section">
+                <div class="box">
+                    <h2 data-i18n="myListHeader">My List</h2>
+                    <p id="empty-list-msg" data-i18n="noItemsMessage">Your list is empty.</p>
+                    <ul id="user-list" class="user-list"></ul>
+                </div>
+            </section>
+        </div>
 
-			<fieldset>
-				<legend>Radios:</legend>
-				<div id="radios-urls">
-					<div id="stored-urls"></div>
-				</div>
-			</fieldset>
-
-			<div class="space-small"></div>
-
-			<div class="space-small"></div>
-
-			<button id="save">Save</button>
-		</div>
-
-		<div class="maia-signature"></div>
-
-		<div class="maia-footer" id="maia-footer">
-			<div class="maia-footer-global">
-				<div class="maia-aux">
-					<a href="http://tareq.tk/labs" target="_blank">Tareq.tk</a>
-				</div>
-			</div>
-		</div>
-
-		<div id="ShowNotification"></div>
-
-		<script type="text/javascript" src="js/jquery.min.js"></script>
-		<script type="text/javascript" src="js/options.js"></script>
-	</body>
+        <div id="toast" class="toast"></div>
+    </div>
+    <script src="js/options.js"></script>
+</body>
 </html>
