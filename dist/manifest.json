@@ -1,7 +1,7 @@
 {
 	"name": "__MSG_extName__",
 	"description": "__MSG_extDescription__",
-	"version": "2.0.0",
+	"version": "3.0.0",
 	"manifest_version": 3,
 	"default_locale": "ar",
 	"homepage_url": "http://labs.tareq.website/ChromeEx/QuranRadio",
@@ -18,7 +18,7 @@
 		"extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
 	},
 	"background": {
-		"service_worker": "js/background.js"
+		"service_worker": "assets/background.js"
 	},
 	"action": {
 		"default_icon": "Icons/Icon.png",

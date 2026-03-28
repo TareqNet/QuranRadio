@@ -18,7 +18,7 @@
 		"extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
 	},
 	"background": {
-		"service_worker": "js/background.js"
+		"service_worker": "assets/background.js"
 	},
 	"action": {
 		"default_icon": "Icons/Icon.png",

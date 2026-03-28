@@ -1,0 +1,35 @@
+{
+  "name": "quranradio",
+  "version": "1.0.0",
+  "description": "هذا المستند التقني يوفر شرحاً مفصلاً لكافة الميزات والتحسينات المعمارية التي تم إنجازها في التحديث الشامل لإضافة \"إذاعة القرآن الكريم\" على متصفح جوجل كروم.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TareqNet/QuranRadio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/TareqNet/QuranRadio/issues"
+  },
+  "homepage": "https://github.com/TareqNet/QuranRadio#readme",
+  "dependencies": {
+    "lucide-react": "^1.7.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.1",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^3.4.19",
+    "vite": "^8.0.3"
+  }
+}
