@@ -147,11 +147,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         chrome.storage.local.get(['playback_state'], (res) => {
             if (res.playback_state && res.playback_state.type === 'surah') {
                 res.playback_state.currentTime = message.currentTime;
+                if (message.duration) res.playback_state.duration = message.duration;
                 chrome.storage.local.set({ playback_state: res.playback_state });
             }
         });
         sendResponse({handled: true});
         return false;
+    } else if (message.action === 'seek') {
+        chrome.runtime.sendMessage({ action: 'seek', time: message.time }, (res) => {
+            sendResponse(res);
+        });
+        return true;
         
     } else if (message.action === 'status') {
         chrome.runtime.sendMessage({ action: 'get_status' }, (res) => {

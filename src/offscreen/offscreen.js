@@ -77,7 +77,21 @@ function createAudioElement() {
 
     newAudio.onpause = () => {
         if (newAudio.src && newAudio.duration > 0 && newAudio.duration !== Infinity) {
-            chrome.runtime.sendMessage({ action: 'sync_time', currentTime: newAudio.currentTime });
+            chrome.runtime.sendMessage({ 
+                action: 'sync_time', 
+                currentTime: newAudio.currentTime,
+                duration: newAudio.duration 
+            });
+        }
+    };
+
+    newAudio.onloadedmetadata = () => {
+        if (newAudio.duration && newAudio.duration !== Infinity) {
+            chrome.runtime.sendMessage({ 
+                action: 'sync_time', 
+                currentTime: newAudio.currentTime,
+                duration: newAudio.duration 
+            });
         }
     };
 
@@ -130,7 +144,24 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         sendResponse({ success: true });
         return false;
     } else if (message.action === 'status') {
-        sendResponse({ playing: audio && !audio.paused && audio.src !== "", src: audio ? audio.src : "" });
+        sendResponse({ 
+            playing: audio && !audio.paused && audio.src !== "", 
+            src: audio ? audio.src : "",
+            currentTime: audio ? audio.currentTime : 0,
+            duration: (audio && audio.duration !== Infinity) ? audio.duration : 0
+        });
+        return false;
+    } else if (message.action === 'seek') {
+        if (audio && audio.duration && audio.duration !== Infinity) {
+            try {
+                audio.currentTime = message.time;
+                sendResponse({ success: true });
+            } catch (e) {
+                sendResponse({ success: false, error: e.message });
+            }
+        } else {
+            sendResponse({ success: false, error: "Audio not seekable" });
+        }
         return false;
     }
 });
@@ -138,6 +169,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // Periodically push currentTime to storage
 setInterval(() => {
     if (audio && !audio.paused && audio.src && audio.duration > 0) {
-        chrome.runtime.sendMessage({ action: 'sync_time', currentTime: audio.currentTime });
+        chrome.runtime.sendMessage({ 
+            action: 'sync_time', 
+            currentTime: audio.currentTime,
+            duration: audio.duration !== Infinity ? audio.duration : 0
+        });
     }
 }, 5000);
