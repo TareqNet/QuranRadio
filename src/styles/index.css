@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: 'Tajawal', system-ui, -apple-system, sans-serif;
+}
+
+.popup-body {
+  width: 360px;
+  max-width: 360px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Custom Webkit Scrollbar for nice look */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #04785766; /* primary with 40% opacity */
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #047857;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #05966966;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
+}
