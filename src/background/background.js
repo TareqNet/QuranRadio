@@ -158,6 +158,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             sendResponse(res);
         });
         return true;
+    } else if (message.action === 'set_volume') {
+        chrome.runtime.sendMessage({ action: 'set_volume', volume: message.volume }, (res) => {
+            sendResponse(res);
+        });
+        return true;
         
     } else if (message.action === 'status') {
         chrome.runtime.sendMessage({ action: 'get_status' }, (res) => {

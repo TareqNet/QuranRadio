@@ -95,6 +95,11 @@ function createAudioElement() {
         }
     };
 
+    chrome.storage.local.get(['user_volume'], (res) => {
+        const vol = res.user_volume !== undefined ? res.user_volume : 1.0;
+        newAudio.volume = vol;
+    });
+
     return newAudio;
 }
 
@@ -161,6 +166,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             }
         } else {
             sendResponse({ success: false, error: "Audio not seekable" });
+        }
+        return false;
+    } else if (message.action === 'set_volume') {
+        if (audio) {
+            audio.volume = message.volume;
+            sendResponse({ success: true });
         }
         return false;
     }

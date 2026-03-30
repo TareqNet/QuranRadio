@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { usePlayerStore } from '../store/playerStore';
-import { Play, Pause, Repeat, FastForward } from 'lucide-react';
+import { Play, Pause, Repeat, FastForward, Volume2, VolumeX } from 'lucide-react';
 
 export default function PlayerControls({ selectedItem, lang, t }) {
-  const { playbackState, updatePlaybackState } = usePlayerStore();
+  const { playbackState, updatePlaybackState, userVolume, setVolume } = usePlayerStore();
   const [cachedSuwar, setCachedSuwar] = useState([]);
   const [surahId, setSurahId] = useState(1);
   const [repeat, setRepeat] = useState(playbackState.repeatCount || 0);
@@ -184,6 +184,12 @@ export default function PlayerControls({ selectedItem, lang, t }) {
     setCurrentTime(parseFloat(e.target.value));
   };
 
+  const onVolumeChange = (e) => {
+    const val = parseFloat(e.target.value);
+    setVolume(val);
+    chrome.runtime.sendMessage({ action: "set_volume", volume: val });
+  };
+
   const isRtl = lang === 'ar' || lang === 'fa';
   const gradientDir = isRtl ? 'to left' : 'to right';
 
@@ -223,6 +229,27 @@ export default function PlayerControls({ selectedItem, lang, t }) {
           className="w-full h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer accent-gold hover:accent-gold/80 transition-all"
           style={{
             background: `linear-gradient(${gradientDir}, #d97706 0%, #d97706 ${(currentTime / (duration || 1)) * 100}%, rgba(255,255,255,0.2) ${(currentTime / (duration || 1)) * 100}%, rgba(255,255,255,0.2) 100%)`
+          }}
+        />
+      </div>
+
+      {/* Volume Control */}
+      <div className="w-full px-2 mb-6 flex items-center gap-3">
+        {userVolume === 0 ? (
+          <VolumeX className="w-4 h-4 text-white/70" />
+        ) : (
+          <Volume2 className="w-4 h-4 text-white/70" />
+        )}
+        <input 
+          type="range" 
+          min="0" 
+          max="1" 
+          step="0.01"
+          value={userVolume}
+          onChange={onVolumeChange}
+          className="flex-1 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-white hover:accent-gold transition-all"
+          style={{
+            background: `linear-gradient(to right, #fff 0%, #fff ${userVolume * 100}%, rgba(255,255,255,0.2) ${userVolume * 100}%, rgba(255,255,255,0.2) 100%)`
           }}
         />
       </div>
