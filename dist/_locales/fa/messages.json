@@ -1,22 +1,86 @@
 {
-    "extName": { "message": "رادیو قرآن کریم" },
-    "extDescription": { "message": "رادیو قرآن کریم مستقیماً از mp3quran.net." },
-    "optionsTitle": { "message": "رادیو قرآن کریم - تنظیمات" },
-    "optionsHeader": { "message": "تنظیمات" },
-    "radiosHeader": { "message": "رادیوهای زنده" },
-    "recitersHeader": { "message": "قاریان" },
-    "searchPlaceholder": { "message": "جستجو..." },
-    "addButton": { "message": "افزودن" },
-    "myListHeader": { "message": "لیست من" },
-    "removeLabel": { "message": "حذف" },
-    "saveMessage": { "message": "با موفقیت ذخیره شد" },
-    "playLabel": { "message": "پخش" },
-    "pauseLabel": { "message": "توقف" },
-    "repeatLabel": { "message": "تکرار سوره" },
-    "autoNextLabel": { "message": "پخش خودکار سوره بعدی" },
-    "selectReciterLabel": { "message": "انتخاب قاری یا رادیو" },
-    "selectSurahLabel": { "message": "انتخاب سوره" },
-    "loadingLabel": { "message": "در حال بارگذاری..." },
-    "optionsLink": { "message": "تنظیمات" },
-    "noItemsMessage": { "message": "لیست خالی است. برای افزودن قاریان به تنظیمات بروید." }
+  "extName": {
+    "message": "رادیو قرآن کریم"
+  },
+  "extDescription": {
+    "message": "رادیو قرآن کریم مستقیماً از mp3quran.net."
+  },
+  "optionsTitle": {
+    "message": "رادیو قرآن کریم - تنظیمات"
+  },
+  "optionsHeader": {
+    "message": "تنظیمات"
+  },
+  "radiosHeader": {
+    "message": "رادیوهای زنده"
+  },
+  "recitersHeader": {
+    "message": "قاریان"
+  },
+  "searchPlaceholder": {
+    "message": "جستجو..."
+  },
+  "addButton": {
+    "message": "افزودن"
+  },
+  "myListHeader": {
+    "message": "لیست من"
+  },
+  "removeLabel": {
+    "message": "حذف"
+  },
+  "saveMessage": {
+    "message": "با موفقیت ذخیره شد"
+  },
+  "playLabel": {
+    "message": "پخش"
+  },
+  "pauseLabel": {
+    "message": "توقف"
+  },
+  "repeatLabel": {
+    "message": "تکرار سوره"
+  },
+  "autoNextLabel": {
+    "message": "پخش خودکار سوره بعدی"
+  },
+  "selectReciterLabel": {
+    "message": "انتخاب قاری یا رادیو"
+  },
+  "selectSurahLabel": {
+    "message": "انتخاب سوره"
+  },
+  "loadingLabel": {
+    "message": "در حال بارگذاری..."
+  },
+  "optionsLink": {
+    "message": "تنظیمات"
+  },
+  "noItemsMessage": {
+    "message": "لیست خالی است. برای افزودن قاریان به تنظیمات بروید."
+  },
+  "noResults": {
+    "message": "هیچ نتیجه‌ای یافت نشد"
+  },
+  "lightTheme": {
+    "message": "روشن"
+  },
+  "darkTheme": {
+    "message": "تاریک"
+  },
+  "clickToAdd": {
+    "message": "برای افزودن قاریان و رادیوها کلیک کنید"
+  },
+  "surahLabel": {
+    "message": "سوره"
+  },
+  "fatihaName": {
+    "message": "الفاتحه"
+  },
+  "playbackRetry": {
+    "message": "اتصال شکست خورد.. در حال تلاش مجدد ($1/5)"
+  },
+  "playbackFailedFinal": {
+    "message": "سرور موقتاً در دسترس نیست.. لطفا بعداً دوباره امتحان کنید"
+  }
 }

@@ -1,22 +1,86 @@
 {
-    "extName": { "message": "Kur'an-ı Kerim Radyosu" },
-    "extDescription": { "message": "mp3quran.net'ten Kur'an-ı Kerim Radyosu." },
-    "optionsTitle": { "message": "Kur'an Radyosu - Ayarlar" },
-    "optionsHeader": { "message": "Ayarlar" },
-    "radiosHeader": { "message": "Canlı Radyolar" },
-    "recitersHeader": { "message": "Okuyucular" },
-    "searchPlaceholder": { "message": "Ara..." },
-    "addButton": { "message": "Ekle" },
-    "myListHeader": { "message": "Listem" },
-    "removeLabel": { "message": "Kaldır" },
-    "saveMessage": { "message": "Başarıyla Kaydedildi" },
-    "playLabel": { "message": "Oynat" },
-    "pauseLabel": { "message": "Duraklat" },
-    "repeatLabel": { "message": "Sureyi Tekrarla" },
-    "autoNextLabel": { "message": "Otomatik Sonraki Sure" },
-    "selectReciterLabel": { "message": "Okuyucu veya Radyo Seçin" },
-    "selectSurahLabel": { "message": "Sure Seçin" },
-    "loadingLabel": { "message": "Yükleniyor..." },
-    "optionsLink": { "message": "Ayarlar" },
-    "noItemsMessage": { "message": "Listeniz boş. Ayarlardan kurra veya radyo ekleyin." }
+  "extName": {
+    "message": "Kur'an-ı Kerim Radyosu"
+  },
+  "extDescription": {
+    "message": "mp3quran.net'ten Kur'an-ı Kerim Radyosu."
+  },
+  "optionsTitle": {
+    "message": "Kur'an Radyosu - Ayarlar"
+  },
+  "optionsHeader": {
+    "message": "Ayarlar"
+  },
+  "radiosHeader": {
+    "message": "Canlı Radyolar"
+  },
+  "recitersHeader": {
+    "message": "Okuyucular"
+  },
+  "searchPlaceholder": {
+    "message": "Ara..."
+  },
+  "addButton": {
+    "message": "Ekle"
+  },
+  "myListHeader": {
+    "message": "Listem"
+  },
+  "removeLabel": {
+    "message": "Kaldır"
+  },
+  "saveMessage": {
+    "message": "Başarıyla Kaydedildi"
+  },
+  "playLabel": {
+    "message": "Oynat"
+  },
+  "pauseLabel": {
+    "message": "Duraklat"
+  },
+  "repeatLabel": {
+    "message": "Sureyi Tekrarla"
+  },
+  "autoNextLabel": {
+    "message": "Otomatik Sonraki Sure"
+  },
+  "selectReciterLabel": {
+    "message": "Okuyucu veya Radyo Seçin"
+  },
+  "selectSurahLabel": {
+    "message": "Sure Seçin"
+  },
+  "loadingLabel": {
+    "message": "Yükleniyor..."
+  },
+  "optionsLink": {
+    "message": "Ayarlar"
+  },
+  "noItemsMessage": {
+    "message": "Listeniz boş. Ayarlardan kurra veya radyo ekleyin."
+  },
+  "noResults": {
+    "message": "Sonuç bulunamadı"
+  },
+  "lightTheme": {
+    "message": "Açık"
+  },
+  "darkTheme": {
+    "message": "Koyu"
+  },
+  "clickToAdd": {
+    "message": "Okuyucuları ve radyoları eklemek için tıklayın"
+  },
+  "surahLabel": {
+    "message": "Sure"
+  },
+  "fatihaName": {
+    "message": "Fatiha"
+  },
+  "playbackRetry": {
+    "message": "Bağlantı hatası.. Yeniden deneniyor ($1/5)"
+  },
+  "playbackFailedFinal": {
+    "message": "Sunucu geçici olarak kapalı.. Lütfen daha sonra tekrar deneyin"
+  }
 }

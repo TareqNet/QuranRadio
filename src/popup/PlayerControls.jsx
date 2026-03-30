@@ -32,14 +32,24 @@ export default function PlayerControls({ selectedItem, lang, t }) {
     fetchSuwar();
   }, [lang]);
 
+  const [prevServer, setPrevServer] = useState(null);
+
   useEffect(() => {
     // Sync UI with playback state when Reciter is actively playing
     if (playbackState.type === 'surah' && selectedItem?.server === playbackState.baseServer) {
       if (playbackState.currentSurahId) setSurahId(playbackState.currentSurahId);
       if (playbackState.repeatCount !== undefined) setRepeat(playbackState.repeatCount);
       if (playbackState.autoNext !== undefined) setAutoNext(playbackState.autoNext);
+    } 
+    // If we switched to a NEW reciter that is NOT currently playing, reset to its first surah
+    else if (selectedItem && selectedItem.type === 'reciter' && selectedItem.server !== prevServer) {
+      const firstSurah = parseInt(selectedItem.surahList?.split(',')[0]);
+      if (!isNaN(firstSurah)) {
+        setSurahId(firstSurah);
+        setPrevServer(selectedItem.server);
+      }
     }
-  }, [playbackState, selectedItem]);
+  }, [playbackState, selectedItem, prevServer]);
 
   const togglePlay = () => {
     if (playbackState.playing) {
@@ -64,20 +74,31 @@ export default function PlayerControls({ selectedItem, lang, t }) {
     }
   };
 
-  const triggerPlaySurah = () => {
+  const triggerPlaySurah = (overrideId = null) => {
     if (!selectedItem || selectedItem.type !== 'reciter') return;
 
-    const surahObj = cachedSuwar.find(s => s.id === surahId);
-    const sName = surahObj ? surahObj.name : `Surah ${surahId}`;
-    const surahWord = lang === 'ar' ? 'سورة' : 'Surah';
-    const surahTitle = `${surahWord} ${sName}`;
+    const activeId = overrideId || surahId;
+    const surahObj = cachedSuwar.find(s => s.id === activeId);
+    
+    // Improved name fallback
+    let sName = surahObj ? surahObj.name : activeId;
+    
+    // Hard fallback for Al-Fatiha if list not loaded
+    if (!surahObj && activeId === 1) {
+      sName = t('fatihaName');
+    }
+
+    const surahWord = t('surahLabel');
+    
+    // If we have a name (non-numeric string), use it. Otherwise use the ID.
+    const surahTitle = isNaN(sName) ? `${surahWord} ${sName}` : `${surahWord} ${activeId}`;
     const subTitle = `${selectedItem.name} - ${selectedItem.moshafName}`;
 
     chrome.runtime.sendMessage({
       action: 'play_surah',
       baseServer: selectedItem.server,
       surahList: selectedItem.surahList.split(','),
-      surahId: surahId,
+      surahId: activeId,
       title: surahTitle,
       subtitle: subTitle,
       repeatCount: repeat,
@@ -90,7 +111,7 @@ export default function PlayerControls({ selectedItem, lang, t }) {
     setSurahId(newId);
     // Auto-play when user changes the dropdown manually
     if (selectedItem?.type === 'reciter') {
-      setTimeout(() => triggerPlaySurah(), 50); // Small delay to let React update state
+      triggerPlaySurah(newId);
     }
   };
 
@@ -115,32 +136,35 @@ export default function PlayerControls({ selectedItem, lang, t }) {
   return (
     <div className="w-full flex flex-col items-center">
       
-      {/* Play/Pause Button */}
+      {/* Classic 2.0.0 Play/Pause Button */}
       <div 
         onClick={togglePlay}
-        className="w-20 h-20 rounded-full bg-gradient-to-tr from-primaryDark to-primaryLight 
-                   flex items-center justify-center cursor-pointer shadow-lg shadow-primary/40 
-                   hover:scale-105 active:scale-95 transition-all text-white mb-6 border-4 border-white/10"
+        className="w-[56px] h-[56px] rounded-full bg-white flex items-center justify-center cursor-pointer shadow-[0_4px_8px_rgba(0,0,0,0.2),inset_0_0_0_2px_#d97706] hover:scale-[0.98] active:scale-95 transition-transform text-primaryDark mb-6"
       >
         {playbackState.playing ? (
-          <Pause fill="currentColor" className="w-8 h-8 mr-1" />
+          <Pause fill="currentColor" className="w-7 h-7" />
         ) : (
-          <Play fill="currentColor" className="w-8 h-8 ml-1" />
+          <Play fill="currentColor" className="w-7 h-7 ml-1" />
         )}
       </div>
 
       {/* Surah Controls */}
-      {selectedItem?.type === 'reciter' && (
-        <div className="w-full bg-black/20 rounded-xl p-4 border border-white/5 space-y-3">
-          
-          <div className="flex flex-col space-y-1">
-            <label className="text-xs text-white/60 pl-1">{t('selectSurahLabel')}</label>
-            <select 
-              value={surahId} 
-              onChange={onSurahChange}
-              className="w-full bg-bgDark border border-white/10 rounded-lg p-2 text-sm outline-none focus:border-primaryLight transition-colors"
-            >
-              {selectedItem.surahList?.split(',').map(idStr => {
+      {/* Surah Controls - Always visible but disabled for radios */}
+      <div className={`w-full bg-white/15 backdrop-blur-sm rounded-xl p-3 border border-white/20 space-y-3 shadow-sm transition-all ${
+        (selectedItem?.type !== 'reciter' || playbackState.type === 'radio') 
+          ? 'opacity-40 grayscale pointer-events-none' 
+          : 'opacity-100'
+      }`}>
+        
+        <div className="flex flex-col space-y-1">
+          <label className="text-xs text-white pl-1 font-medium">{t('selectSurahLabel')}</label>
+          <select 
+            value={surahId} 
+            onChange={onSurahChange}
+            className="w-full bg-white/90 text-slate-800 border border-white/40 rounded-lg p-1.5 text-sm outline-none focus:border-gold transition-colors font-medium"
+          >
+            {selectedItem?.type === 'reciter' && selectedItem.surahList ? (
+              selectedItem.surahList.split(',').map(idStr => {
                 const id = parseInt(idStr);
                 const s = cachedSuwar.find(x => x.id === id);
                 return (
@@ -148,41 +172,43 @@ export default function PlayerControls({ selectedItem, lang, t }) {
                     {id}. {s ? s.name : `Surah ${id}`}
                   </option>
                 );
-              })}
-            </select>
-          </div>
-
-          <div className="flex justify-between items-center bg-black/30 p-2 rounded-lg border border-white/5">
-            <label className="flex items-center space-x-2 space-x-reverse cursor-pointer">
-              <input 
-                type="checkbox" 
-                checked={autoNext} 
-                onChange={onAutoNextChange}
-                className="accent-primary w-4 h-4 cursor-pointer"
-              />
-              <span className="text-xs text-white/80 flex items-center">
-                <FastForward className="w-3 h-3 ml-1" />
-                {t('autoNextLabel')}
-              </span>
-            </label>
-
-            <label className="flex items-center space-x-2 space-x-reverse">
-              <span className="text-xs text-white/80 flex items-center">
-                <Repeat className="w-3 h-3 ml-1" />
-                {t('repeatLabel')}
-              </span>
-              <input 
-                type="number" 
-                min="0" 
-                value={repeat} 
-                onChange={onRepeatChange}
-                className="w-12 bg-bgDark border border-white/10 rounded p-1 text-xs text-center outline-none focus:border-primaryLight"
-              />
-            </label>
-          </div>
-
+              })
+            ) : (
+              <option value="0">{lang === 'ar' ? 'بث إذاعي مباشر' : 'Live Radio Stream'}</option>
+            )}
+          </select>
         </div>
-      )}
+
+        <div className="flex justify-between items-center pt-1">
+          <label className="flex items-center space-x-2 space-x-reverse cursor-pointer">
+            <input 
+              type="checkbox" 
+              checked={autoNext} 
+              onChange={onAutoNextChange}
+              className="accent-primary w-4 h-4 cursor-pointer"
+            />
+            <span className="text-xs text-white flex items-center">
+              <FastForward className="w-3 h-3 ml-1" />
+              {t('autoNextLabel')}
+            </span>
+          </label>
+
+          <label className="flex items-center space-x-2 space-x-reverse">
+            <span className="text-xs text-white flex items-center">
+              <Repeat className="w-3 h-3 ml-1" />
+              {t('repeatLabel')}
+            </span>
+            <input 
+              type="number" 
+              min="0" 
+              value={repeat} 
+              onChange={onRepeatChange}
+              className="w-12 bg-white/90 text-slate-800 border border-white/40 rounded p-1 text-xs text-center outline-none focus:border-gold font-medium"
+            />
+          </label>
+        </div>
+
+      </div>
 
     </div>
   );

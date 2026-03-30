@@ -5,7 +5,7 @@ import SearchableList from './SearchableList';
 import MyListEditor from './MyListEditor';
 
 export default function Options() {
-  const { userList, userLang, initialize, setLang, updateUserList } = usePlayerStore();
+  const { userList, userLang, userTheme, initialize, setLang, updateUserList } = usePlayerStore();
   const { t, loaded } = useI18n(userLang);
 
   const [radios, setRadios] = useState([]);
@@ -14,6 +14,16 @@ export default function Options() {
   useEffect(() => {
     initialize();
   }, [initialize]);
+
+  useEffect(() => {
+    document.documentElement.dir = (userLang === 'ar' || userLang === 'fa' || userLang === 'ur') ? 'rtl' : 'ltr';
+    document.documentElement.lang = userLang;
+    if (userTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [userLang, userTheme]);
 
   useEffect(() => {
     const fetchApi = async (endpoint) => {
@@ -57,67 +67,81 @@ export default function Options() {
     loadAPIData();
   }, [userLang]);
 
-  if (!loaded) return <div className="p-8 text-white">Loading Settings...</div>;
+  if (!loaded) return <div className="p-8 text-primary">{t('loadingLabel')}</div>;
 
   return (
-    <div className="max-w-6xl mx-auto p-6 md:p-10 font-sans min-h-screen flex flex-col">
-      <header className="flex justify-between items-center mb-10 pb-4 border-b border-white/10">
-        <h1 className="text-3xl font-bold tracking-tight text-primaryLight">{t('optionsHeader')}</h1>
-        <select 
-          value={userLang}
-          onChange={(e) => setLang(e.target.value)}
-          className="bg-black/40 border border-white/20 rounded-lg px-4 py-2 text-sm outline-none focus:border-primary transition-colors cursor-pointer"
-        >
-          <option value="ar">العربية</option>
-          <option value="en">English</option>
-          <option value="fr">Français</option>
-          <option value="tr">Türkçe</option>
-          <option value="fa">فارسی</option>
-          <option value="es">Español</option>
-        </select>
-      </header>
+    <div className={`transition-colors min-h-screen ${userTheme === 'dark' ? 'bg-bgDark text-textDark' : 'bg-bgLight text-textLight'}`}>
+      <div className="max-w-6xl mx-auto p-6 md:p-10 font-sans flex flex-col h-full">
+        <header className="flex flex-col md:flex-row justify-between items-center mb-10 pb-4 border-b-2 border-gold">
+          <h1 className="text-3xl font-bold text-primary mb-4 md:mb-0" style={{fontFamily: "'Amiri', serif"}}>{t('optionsHeader')}</h1>
+          
+          <div className="flex gap-4">
+            <select 
+              value={userTheme}
+              onChange={(e) => usePlayerStore.getState().setTheme(e.target.value)}
+              className="bg-transparent text-primary font-bold border border-primary/20 rounded-lg px-3 py-1 cursor-pointer outline-none focus:border-primary hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <option value="light">☀️ {t('lightTheme')}</option>
+              <option value="dark">🌙 {t('darkTheme')}</option>
+            </select>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-1">
-        
-        {/* Radios Column */}
-        <div className="bg-white/5 rounded-2xl border border-white/10 p-5 flex flex-col h-[70vh]">
-          <h2 className="text-xl font-semibold mb-4 text-emerald-400">{t('radiosHeader')}</h2>
-          <SearchableList 
-            type="radio" 
-            items={radios} 
-            userList={userList}
-            updateUserList={updateUserList}
-            t={t} 
-          />
+            <select 
+              value={userLang}
+              onChange={(e) => setLang(e.target.value)}
+              className="bg-transparent text-primary font-bold border border-primary/20 rounded-lg px-3 py-1 cursor-pointer outline-none focus:border-primary hover:bg-black/5 dark:hover:bg-white/5"
+            >
+              <option value="ar">العربية</option>
+              <option value="en">English</option>
+              <option value="fr">Français</option>
+              <option value="tr">Türkçe</option>
+              <option value="fa">فارسی</option>
+              <option value="es">Español</option>
+            </select>
+          </div>
+        </header>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-1">
+          
+          {/* Radios Column */}
+          <div className="bg-cardLight dark:bg-cardDark rounded-xl border border-[#e2e8f0] dark:border-[#334155] shadow-sm p-5 flex flex-col h-[70vh]">
+            <h2 className="text-[22px] font-semibold mb-4 text-gold border-b border-[#e2e8f0] dark:border-[#334155] pb-3" style={{fontFamily: "'Amiri', serif"}}>{t('radiosHeader')}</h2>
+            <SearchableList 
+              type="radio" 
+              items={radios} 
+              userList={userList}
+              updateUserList={updateUserList}
+              t={t} 
+            />
+          </div>
+
+          {/* Reciters Column */}
+          <div className="bg-cardLight dark:bg-cardDark rounded-xl border border-[#e2e8f0] dark:border-[#334155] shadow-sm p-5 flex flex-col h-[70vh]">
+            <h2 className="text-[22px] font-semibold mb-4 text-gold border-b border-[#e2e8f0] dark:border-[#334155] pb-3" style={{fontFamily: "'Amiri', serif"}}>{t('recitersHeader')}</h2>
+            <SearchableList 
+              type="reciter" 
+              items={reciters} 
+              userList={userList}
+              updateUserList={updateUserList}
+              t={t} 
+            />
+          </div>
+
+          {/* My List Column */}
+          <div className="bg-cardLight dark:bg-cardDark rounded-xl border border-[#e2e8f0] dark:border-[#334155] shadow-md p-5 flex flex-col h-[70vh]">
+            <h2 className="text-[22px] font-semibold mb-4 text-gold border-b border-[#e2e8f0] dark:border-[#334155] pb-3 flex items-center" style={{fontFamily: "'Amiri', serif"}}>
+              {t('myListHeader')}
+              <span className="bg-primary px-3 py-1 rounded text-sm mr-3 ml-3 text-white font-sans">{userList.length}</span>
+            </h2>
+            <MyListEditor 
+              userList={userList} 
+              updateUserList={updateUserList}
+              radios={radios}
+              reciters={reciters}
+              t={t} 
+            />
+          </div>
+
         </div>
-
-        {/* Reciters Column */}
-        <div className="bg-white/5 rounded-2xl border border-white/10 p-5 flex flex-col h-[70vh]">
-          <h2 className="text-xl font-semibold mb-4 text-emerald-400">{t('recitersHeader')}</h2>
-          <SearchableList 
-             type="reciter" 
-             items={reciters} 
-             userList={userList}
-             updateUserList={updateUserList}
-             t={t} 
-          />
-        </div>
-
-        {/* My List Column */}
-        <div className="bg-primary/5 rounded-2xl border border-primary/20 p-5 flex flex-col h-[70vh] lg:shadow-xl lg:shadow-primary/5">
-          <h2 className="text-xl font-semibold mb-4 text-white flex items-center">
-            <span className="bg-primary px-3 py-1 rounded-md text-sm mr-3 ml-3">{userList.length}</span>
-            {t('myListHeader')}
-          </h2>
-          <MyListEditor 
-             userList={userList} 
-             updateUserList={updateUserList}
-             radios={radios}
-             reciters={reciters}
-             t={t} 
-          />
-        </div>
-
       </div>
     </div>
   );

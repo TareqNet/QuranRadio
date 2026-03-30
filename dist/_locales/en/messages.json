@@ -1,22 +1,86 @@
 {
-    "extName": { "message": "Quran Radio" },
-    "extDescription": { "message": "The Holy Quran Kareem from mp3quran.net. Listen to live Radios, choose specific Reciters and Surahs, and enjoy modern features." },
-    "optionsTitle": { "message": "Quran Radio - Options" },
-    "optionsHeader": { "message": "Options" },
-    "radiosHeader": { "message": "Live Radios" },
-    "recitersHeader": { "message": "Reciters" },
-    "searchPlaceholder": { "message": "Search..." },
-    "addButton": { "message": "Add" },
-    "myListHeader": { "message": "My List" },
-    "removeLabel": { "message": "Remove" },
-    "saveMessage": { "message": "Saved Successfully" },
-    "playLabel": { "message": "Play" },
-    "pauseLabel": { "message": "Pause" },
-    "repeatLabel": { "message": "Repeat Surah" },
-    "autoNextLabel": { "message": "Auto-next Surah" },
-    "selectReciterLabel": { "message": "Select Reciter or Radio" },
-    "selectSurahLabel": { "message": "Select Surah" },
-    "loadingLabel": { "message": "Loading..." },
-    "optionsLink": { "message": "Settings" },
-    "noItemsMessage": { "message": "Your list is empty. Go to settings to add reciters or radios." }
+  "extName": {
+    "message": "Quran Radio"
+  },
+  "extDescription": {
+    "message": "The Holy Quran Kareem from mp3quran.net. Listen to live Radios, choose specific Reciters and Surahs, and enjoy modern features."
+  },
+  "optionsTitle": {
+    "message": "Quran Radio - Options"
+  },
+  "optionsHeader": {
+    "message": "Options"
+  },
+  "radiosHeader": {
+    "message": "Live Radios"
+  },
+  "recitersHeader": {
+    "message": "Reciters"
+  },
+  "searchPlaceholder": {
+    "message": "Search..."
+  },
+  "addButton": {
+    "message": "Add"
+  },
+  "myListHeader": {
+    "message": "My List"
+  },
+  "removeLabel": {
+    "message": "Remove"
+  },
+  "saveMessage": {
+    "message": "Saved Successfully"
+  },
+  "playLabel": {
+    "message": "Play"
+  },
+  "pauseLabel": {
+    "message": "Pause"
+  },
+  "repeatLabel": {
+    "message": "Repeat Surah"
+  },
+  "autoNextLabel": {
+    "message": "Auto-next Surah"
+  },
+  "selectReciterLabel": {
+    "message": "Select Reciter or Radio"
+  },
+  "selectSurahLabel": {
+    "message": "Select Surah"
+  },
+  "loadingLabel": {
+    "message": "Loading..."
+  },
+  "optionsLink": {
+    "message": "Settings"
+  },
+  "noItemsMessage": {
+    "message": "Your list is empty. Go to settings to add reciters or radios."
+  },
+  "noResults": {
+    "message": "No results found"
+  },
+  "lightTheme": {
+    "message": "Light"
+  },
+  "darkTheme": {
+    "message": "Dark"
+  },
+  "clickToAdd": {
+    "message": "Click to add reciters and radios"
+  },
+  "surahLabel": {
+    "message": "Surah"
+  },
+  "fatihaName": {
+    "message": "Al-Fatiha"
+  },
+  "playbackRetry": {
+    "message": "Connection failed.. Retrying ($1/5)"
+  },
+  "playbackFailedFinal": {
+    "message": "Server is temporarily down.. Please try again later"
+  }
 }

@@ -59,6 +59,22 @@ chrome.runtime.onStartup.addListener(() => {
     });
 });
 
+let translationsCache = {};
+
+async function getTranslation(lang, key, fallback = "") {
+    if (!translationsCache[lang]) {
+        try {
+            const url = chrome.runtime.getURL(`_locales/${lang}/messages.json`);
+            const res = await fetch(url);
+            translationsCache[lang] = await res.json();
+        } catch (e) {
+            return fallback || key;
+        }
+    }
+    const dict = translationsCache[lang];
+    return dict[key] ? dict[key].message : (fallback || key);
+}
+
 // Update Badge UI
 function updateUIBadge(isPlaying, title = "") {
     if (isPlaying) {
@@ -150,6 +166,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         // Handle Repeat and Auto-Next logic
         chrome.storage.local.get(['playback_state', 'user_lang'], async (res) => {
             const state = res.playback_state;
+            const lang = res.user_lang || 'ar';
+            
             if (state && state.type === 'surah' && state.playing) {
                 // Check repeat
                 if (state.repeatCount > 0) {
@@ -172,7 +190,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                         
                         // Try to find the new Surah name for the title
                         let newTitle = state.title; 
-                        const lang = res.user_lang || 'ar';
                         const cKey = `api_${lang}_suwar`;
                         const suwarCache = await chrome.storage.local.get([cKey]);
                         let cachedSuwar = suwarCache[cKey] ? suwarCache[cKey].suwar : [];
@@ -181,12 +198,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                             cachedSuwar = data ? data.suwar : [];
                         }
                         
+                        const surahLabel = await getTranslation(lang, 'surahLabel');
                         if (cachedSuwar.length > 0) {
                             const surahObj = cachedSuwar.find(s => s.id === nextSurahId);
                             if (surahObj) {
-                                const surahLabel = lang === 'ar' ? 'سورة' : 'Surah';
                                 newTitle = `${surahLabel} ${surahObj.name}`;
+                            } else {
+                                newTitle = `${surahLabel} ${nextSurahId}`;
                             }
+                        } else {
+                            // Fallback if list not loaded during auto-next
+                            let name = nextSurahId;
+                            if (nextSurahId === 1) {
+                                name = await getTranslation(lang, 'fatihaName', 'Al-Fatiha');
+                            }
+                            newTitle = `${surahLabel} ${name}`;
                         }
                         
                         let url = state.baseServer;

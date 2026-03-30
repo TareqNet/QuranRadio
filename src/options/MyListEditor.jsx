@@ -22,8 +22,8 @@ export default function MyListEditor({ userList, updateUserList, radios, reciter
 
   if (userList.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center border-2 border-dashed border-white/10 rounded-xl">
-        <p className="text-white/50">{t('noItemsMessage')}</p>
+      <div className="flex-1 flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-white/10 rounded-xl">
+        <p className="text-gray-500 dark:text-white/50">{t('noItemsMessage')}</p>
       </div>
     );
   }
@@ -51,12 +51,12 @@ export default function MyListEditor({ userList, updateUserList, radios, reciter
     <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 pl-2">
       <ul className="space-y-3">
         {hydratedList.map((item, idx) => (
-          <li key={idx} className="bg-black/30 border border-primary/20 p-3 rounded-lg flex justify-between items-center group">
+          <li key={idx} className="bg-white dark:bg-black/30 border border-primary/20 p-3 rounded-lg flex justify-between items-center group shadow-sm dark:shadow-none">
             
             <div className="flex items-center flex-1 overflow-hidden">
               <span className="text-xl mr-3 opacity-70 ml-2">{item.type === 'radio' ? '📻' : '📖'}</span>
               <div className="flex flex-col truncate pr-2">
-                <span className="font-semibold text-sm text-white truncate">{item.name}</span>
+                <span className="font-semibold text-sm text-gray-800 dark:text-white truncate">{item.name}</span>
                 {item.type === 'reciter' && (
                   <span className="text-xs text-emerald-400 truncate opacity-80">{item.moshafName}</span>
                 )}
@@ -67,7 +67,7 @@ export default function MyListEditor({ userList, updateUserList, radios, reciter
               <button 
                 onClick={() => moveItem(idx, -1)}
                 disabled={idx === 0}
-                className="p-1.5 bg-black/50 hover:bg-white/10 rounded text-white/70 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-1.5 bg-gray-100 dark:bg-black/50 hover:bg-gray-200 dark:hover:bg-white/10 rounded text-gray-600 dark:text-white/70 hover:text-gray-900 dark:hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 title="Up"
               >
                 <ArrowUp className="w-4 h-4" />
@@ -75,7 +75,7 @@ export default function MyListEditor({ userList, updateUserList, radios, reciter
               <button 
                 onClick={() => moveItem(idx, 1)}
                 disabled={idx === userList.length - 1}
-                className="p-1.5 bg-black/50 hover:bg-white/10 rounded text-white/70 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="p-1.5 bg-gray-100 dark:bg-black/50 hover:bg-gray-200 dark:hover:bg-white/10 rounded text-gray-600 dark:text-white/70 hover:text-gray-900 dark:hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 title="Down"
               >
                 <ArrowDown className="w-4 h-4" />
