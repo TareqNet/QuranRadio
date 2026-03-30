@@ -8,6 +8,45 @@ export default function PlayerControls({ selectedItem, lang, t }) {
   const [surahId, setSurahId] = useState(1);
   const [repeat, setRepeat] = useState(playbackState.repeatCount || 0);
   const [autoNext, setAutoNext] = useState(playbackState.autoNext ?? true);
+  
+  const [currentTime, setCurrentTime] = useState(playbackState.currentTime || 0);
+  const [duration, setDuration] = useState(playbackState.duration || 0);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const formatTime = (s) => {
+    if (!s || isNaN(s)) return "00:00:00";
+    const hrs = Math.floor(s / 3600);
+    const mins = Math.floor((s % 3600) / 60);
+    const secs = Math.floor(s % 60);
+    return [hrs, mins, secs]
+      .map(v => v.toString().padStart(2, "0"))
+      .join(":");
+  };
+
+  useEffect(() => {
+    let interval = null;
+    if (playbackState.playing) {
+      interval = setInterval(() => {
+        chrome.runtime.sendMessage({ action: "status" }, (res) => {
+          if (res && !isDragging) {
+            if (typeof res.currentTime === "number") setCurrentTime(res.currentTime);
+            if (typeof res.duration === "number") setDuration(res.duration);
+          }
+        });
+      }, 1000);
+    } else {
+      // Still sync once if not playing to catch last state
+      chrome.storage.local.get(["playback_state"], (res) => {
+        if (res.playback_state && !isDragging) {
+          setCurrentTime(res.playback_state.currentTime || 0);
+          setDuration(res.playback_state.duration || 0);
+        }
+      });
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [playbackState.playing, isDragging]);
 
   useEffect(() => {
     // Load suwar list dictionary from storage
@@ -133,6 +172,21 @@ export default function PlayerControls({ selectedItem, lang, t }) {
     }
   };
 
+  const onSeek = (e) => {
+    const val = parseFloat(e.target.value);
+    setCurrentTime(val);
+    setIsDragging(false);
+    chrome.runtime.sendMessage({ action: "seek", time: val });
+  };
+
+  const onSeeking = (e) => {
+    setIsDragging(true);
+    setCurrentTime(parseFloat(e.target.value));
+  };
+
+  const isRtl = lang === 'ar' || lang === 'fa';
+  const gradientDir = isRtl ? 'to left' : 'to right';
+
   return (
     <div className="w-full flex flex-col items-center">
       
@@ -146,6 +200,31 @@ export default function PlayerControls({ selectedItem, lang, t }) {
         ) : (
           <Play fill="currentColor" className="w-7 h-7 ml-1" />
         )}
+      </div>
+
+      {/* Progress Bar - Only for Surah mode, disabled otherwise */}
+      <div className={`w-full px-1 mb-5 transition-all ${
+        (selectedItem?.type !== 'reciter' || playbackState.type === 'radio') 
+          ? 'opacity-40 grayscale pointer-events-none' 
+          : 'opacity-100'
+      }`} dir={isRtl ? 'rtl' : 'ltr'}>
+        <div className="flex justify-between items-center mb-1">
+          <span className="text-[10px] text-white/80 font-medium tabular-nums">{formatTime(currentTime)}</span>
+          <span className="text-[10px] text-white/80 font-medium tabular-nums">{formatTime(duration)}</span>
+        </div>
+        <input 
+          type="range" 
+          min="0" 
+          max={duration || 100} 
+          step="0.1"
+          value={currentTime}
+          onInput={onSeeking}
+          onChange={onSeek}
+          className="w-full h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer accent-gold hover:accent-gold/80 transition-all"
+          style={{
+            background: `linear-gradient(${gradientDir}, #d97706 0%, #d97706 ${(currentTime / (duration || 1)) * 100}%, rgba(255,255,255,0.2) ${(currentTime / (duration || 1)) * 100}%, rgba(255,255,255,0.2) 100%)`
+          }}
+        />
       </div>
 
       {/* Surah Controls */}
